@@ -1,0 +1,24 @@
+# STS #
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA #
+.idea/
+*.iml
+*.ipr
+*.iws
+*.idea
+.run
+
+# Build Files #
+bin
+target
+build/
+.gradle/
+*/out/
+
