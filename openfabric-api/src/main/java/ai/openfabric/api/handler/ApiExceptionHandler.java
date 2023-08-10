@@ -24,8 +24,8 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = {DockerContainerException.class})
     public ResponseEntity<Object> handleInterruptedException(DockerContainerException e) {
-        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, 500, ZonedDateTime.now(ZoneId.of("Z")));
+        ApiException apiException = new ApiException(e.getMessage(), HttpStatus.BAD_REQUEST, 400, ZonedDateTime.now(ZoneId.of("Z")));
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(apiException, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiException, HttpStatus.BAD_REQUEST);
     }
 }
