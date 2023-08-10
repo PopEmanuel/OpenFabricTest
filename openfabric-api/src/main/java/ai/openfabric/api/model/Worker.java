@@ -11,17 +11,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity()
+@Entity
+@Getter
+@Setter
 public class Worker extends Datable implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "of-uuid")
     @GenericGenerator(name = "of-uuid", strategy = "ai.openfabric.api.model.IDGenerator")
-    @Getter
-    @Setter
     public String id;
 
     public String name;
 
+    public String image;
 
+    public String ports;
+
+    public String env;
+
+    public String hostName;
+    public String cmd;
 }
