@@ -5,6 +5,7 @@ import ai.openfabric.api.model.Worker;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.NotModifiedException;
@@ -64,7 +65,6 @@ public class DockerService {
 
     public CreateContainerResponse createContainer(Worker worker) {
         CreateContainerCmd containerCmd = dockerClient.createContainerCmd(worker.getImage());
-
         setCommandParameters(worker, containerCmd);
         try {
             return containerCmd.exec();
@@ -72,6 +72,14 @@ public class DockerService {
             log.error(Arrays.toString(e.getStackTrace()));
             throw new DockerContainerException("Container with this name already exists:" + containerCmd.getName());
         } catch (NotFoundException e) {
+            try{
+                dockerClient.pullImageCmd(worker.getImage()).exec(new PullImageResultCallback()).awaitCompletion();
+                log.info("Pulling image from docker hub");
+                return containerCmd.exec();
+            }catch (InterruptedException ex){
+                log.error(e.getMessage());
+            }
+
             log.error(Arrays.toString(e.getStackTrace()));
             throw new DockerContainerException(e.getMessage());
         }

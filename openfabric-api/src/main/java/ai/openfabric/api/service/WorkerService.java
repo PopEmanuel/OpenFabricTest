@@ -52,7 +52,7 @@ public class WorkerService {
 
     public List<Worker> getWorkers(Integer page, Integer size){
         PageRequest pageable = PageRequest.of(page, size);
-        return (List<Worker>) workerRepository.findAll(pageable);
+        return workerRepository.findAll(pageable).getContent();
     }
 
     public Worker getWorkerById(String id){

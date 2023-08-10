@@ -10,7 +10,11 @@ import java.util.List;
 @RestController
 @RequestMapping("${node.api.path}/worker")
 public class WorkerController {
-    WorkerService workerService;
+    private final WorkerService workerService;
+
+    public WorkerController(WorkerService workerService) {
+        this.workerService = workerService;
+    }
 
     @PostMapping(path = "/hello")
     public @ResponseBody String hello(@RequestBody String name) {
