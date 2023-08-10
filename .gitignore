@@ -20,5 +20,6 @@ bin
 target
 build/
 .gradle/
+.log
 */out/
 
