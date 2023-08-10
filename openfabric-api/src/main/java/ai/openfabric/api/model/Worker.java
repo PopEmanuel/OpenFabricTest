@@ -30,5 +30,10 @@ public class Worker extends Datable implements Serializable {
     public String env;
 
     public String hostName;
+
     public String cmd;
+
+    public String containerId;
+
+    public Integer status;
 }
