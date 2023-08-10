@@ -3,12 +3,14 @@ package ai.openfabric.api.service;
 import ai.openfabric.api.exception.DockerContainerException;
 import ai.openfabric.api.model.Worker;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.AuthCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.NotModifiedException;
+import com.github.dockerjava.api.model.AuthConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -66,6 +68,7 @@ public class DockerService {
     public CreateContainerResponse createContainer(Worker worker) {
         CreateContainerCmd containerCmd = dockerClient.createContainerCmd(worker.getImage());
         setCommandParameters(worker, containerCmd);
+
         try {
             return containerCmd.exec();
         } catch (ConflictException e) {
@@ -73,8 +76,7 @@ public class DockerService {
             throw new DockerContainerException("Container with this name already exists:" + containerCmd.getName());
         } catch (NotFoundException e) {
             try{
-                dockerClient.pullImageCmd(worker.getImage()).exec(new PullImageResultCallback()).awaitCompletion();
-                log.info("Pulling image from docker hub");
+                pullImageFromDocker(worker.getImage());
                 return containerCmd.exec();
             }catch (InterruptedException ex){
                 log.error(e.getMessage());
@@ -83,6 +85,25 @@ public class DockerService {
             log.error(Arrays.toString(e.getStackTrace()));
             throw new DockerContainerException(e.getMessage());
         }
+    }
+
+    private void pullImageFromDocker(String image) throws InterruptedException {
+        LoginToDockerHub();
+
+        log.info("Pulling image from docker hub");
+        dockerClient.pullImageCmd(image).exec(new PullImageResultCallback()).awaitCompletion();
+    }
+
+    private void LoginToDockerHub() {
+        AuthConfig config = new AuthConfig()
+                .withUsername("username")
+                .withPassword("password");
+
+        AuthCmd authCmd = dockerClient.authCmd()
+                .withAuthConfig(config);
+
+        log.info("Logging into Docker Hub");
+        authCmd.exec();
     }
 
     private void setCommandParameters(Worker worker, CreateContainerCmd containerCmd) {
