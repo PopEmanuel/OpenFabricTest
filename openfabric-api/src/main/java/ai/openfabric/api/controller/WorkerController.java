@@ -1,5 +1,6 @@
 package ai.openfabric.api.controller;
 
+import ai.openfabric.api.model.WorkerStatistic;
 import ai.openfabric.api.model.Worker;
 import ai.openfabric.api.service.WorkerService;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,10 @@ public class WorkerController {
     @GetMapping(path = "/info")
     public ResponseEntity<Worker> getWorkerInformation(@RequestParam String workerId){
         return ResponseEntity.ok(workerService.getWorkerById(workerId));
+    }
+
+    @GetMapping(path = "/statistics")
+    public ResponseEntity<WorkerStatistic> getWorkerStatistics(@RequestParam String workerId){
+        return ResponseEntity.ok(workerService.getWorkerStatistics(workerId));
     }
 }

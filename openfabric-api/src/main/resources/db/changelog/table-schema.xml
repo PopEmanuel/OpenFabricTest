@@ -44,5 +44,30 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="WO_02" author="emanuel">
+        <addColumn tableName="worker">
+            <column name="image" type="varchar (255)"/>
+            <column name="host_name" type="varchar (255)"/>
+            <column name="cmd" type="varchar (255)"/>
+            <column name="env" type="varchar (255)"/>
+            <column name="ports" type="varchar (255)"/>
+            <column name="container_id" type="varchar (255)"/>
+            <column name="status" type="tinyint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="WO_03" author="emanuel">
+        <createTable tableName="worker_statistic" remarks="Worker statistics table">
+            <column name="id" type="${uuid_type}" defaultValueComputed="${uuid_function}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="deleted_at" type="DATETIME"/>
+            <column name="cpu" type="bigint"/>
+            <column name="memory_usage" type="bigint"/>
+            <column name="memory_limit" type="bigint"/>
+        </createTable>
+    </changeSet>
 
 </databaseChangeLog>

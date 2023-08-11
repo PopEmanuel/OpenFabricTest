@@ -1,23 +1,24 @@
 package ai.openfabric.api.service;
 
 import ai.openfabric.api.exception.DockerContainerException;
+import ai.openfabric.api.model.WorkerStatistic;
 import ai.openfabric.api.model.Worker;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.AuthCmd;
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.core.InvocationBuilder.AsyncResultCallback;
+import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.exception.NotModifiedException;
 import com.github.dockerjava.api.model.AuthConfig;
 import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Statistics;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Service
@@ -87,7 +88,23 @@ public class DockerService {
         }
     }
 
-    private void pullImageFromDocker(String image) throws InterruptedException {
+    public Statistics getWorkerStatistics(Worker worker) {
+        StatsCmd statsCmd = dockerClient.statsCmd(worker.getContainerId());
+
+        AsyncResultCallback<Statistics> callback = new AsyncResultCallback<>();
+
+        try {
+            statsCmd.exec(callback);
+            Statistics statistic = callback.awaitResult();
+            callback.close();
+            return statistic;
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new DockerContainerException("Container statistics couldn't be retrieved");
+        }
+    }
+
+        private void pullImageFromDocker(String image) throws InterruptedException {
         LoginToDockerHub();
 
         log.info("Pulling image from docker hub");
