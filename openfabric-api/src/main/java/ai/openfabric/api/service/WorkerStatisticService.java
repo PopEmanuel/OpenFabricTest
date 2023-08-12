@@ -23,7 +23,7 @@ public class WorkerStatisticService {
         this.workerStatisticRepository = workerStatisticRepository;
     }
 
-    public WorkerStatistic addWorkerStatistic(Statistics statistics, Worker worker){
+    public WorkerStatistic addWorkerStatistic(Statistics statistics, Worker worker) {
         WorkerStatistic workerStatistic = new WorkerStatistic();
         workerStatistic.setWorker(worker);
         workerStatistic.setCpu(statistics.getCpuStats().getCpuUsage().getTotalUsage());

@@ -16,19 +16,32 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-@Service
+@Component
+@ComponentScan
 @Slf4j
 public class DockerService {
-    private final String dockerHost = "tcp://localhost:2375";
+    private String dockerHost;
+    private String dockerUsername;
+    private String dockerPassword;
     private DockerClientConfig dockerClientConfig;
     private DockerClient dockerClient;
 
-    public DockerService() {
+    public DockerService(@Value("${docker.host.name}") String dockerHost,
+                         @Value("${docker.host.username}") String dockerUsername,
+                         @Value("${docker.host.password}") String dockerPassword) {
+        this.dockerHost = dockerHost;
+        this.dockerUsername = dockerUsername;
+        this.dockerPassword = dockerPassword;
         this.dockerClientConfig = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost(dockerHost)
                 .build();
@@ -76,10 +89,10 @@ public class DockerService {
             log.error(Arrays.toString(e.getStackTrace()));
             throw new DockerContainerException("Container with this name already exists:" + containerCmd.getName());
         } catch (NotFoundException e) {
-            try{
+            try {
                 pullImageFromDocker(worker.getImage());
                 return containerCmd.exec();
-            }catch (InterruptedException ex){
+            } catch (InterruptedException ex) {
                 log.error(e.getMessage());
             }
 
@@ -104,7 +117,7 @@ public class DockerService {
         }
     }
 
-        private void pullImageFromDocker(String image) throws InterruptedException {
+    private void pullImageFromDocker(String image) throws InterruptedException {
         LoginToDockerHub();
 
         log.info("Pulling image from docker hub");
@@ -113,8 +126,8 @@ public class DockerService {
 
     private void LoginToDockerHub() {
         AuthConfig config = new AuthConfig()
-                .withUsername("username")
-                .withPassword("password");
+                .withUsername(dockerUsername)
+                .withPassword(dockerPassword);
 
         AuthCmd authCmd = dockerClient.authCmd()
                 .withAuthConfig(config);
