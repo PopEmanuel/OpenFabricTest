@@ -1,23 +1,31 @@
 package ai.openfabric.api.dto;
 
 
+import ai.openfabric.api.model.Datable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class WorkerDto {
-    public String id;
+public class WorkerDto extends Datable implements Serializable {
+    private String id;
 
-    public String name;
+    private String name;
 
-    public String image;
+    private String image;
 
-    public String ports;
+    private String ports;
 
-    public String env;
+    private String env;
 
-    public String hostName;
+    private String hostName;
 
-    public String cmd;
+    private String cmd;
+
+    private String containerId;
+
+    private Integer status;
+
 }

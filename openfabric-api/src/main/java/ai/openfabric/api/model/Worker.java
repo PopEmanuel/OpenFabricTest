@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,21 +17,21 @@ public class Worker extends Datable implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "of-uuid")
     @GenericGenerator(name = "of-uuid", strategy = "ai.openfabric.api.model.IDGenerator")
-    public String id;
+    private String id;
 
-    public String name;
+    private String name;
 
-    public String image;
+    private String image;
 
-    public String ports;
+    private String ports;
 
-    public String env;
+    private String env;
 
-    public String hostName;
+    private String hostName;
 
-    public String cmd;
+    private String cmd;
 
-    public String containerId;
+    private String containerId;
 
-    public Integer status;
+    private Integer status;
 }

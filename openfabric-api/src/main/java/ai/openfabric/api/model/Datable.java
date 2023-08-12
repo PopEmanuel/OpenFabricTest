@@ -1,6 +1,8 @@
 package ai.openfabric.api.model;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
@@ -10,6 +12,8 @@ import java.util.Date;
 
 
 @MappedSuperclass
+@Getter
+@Setter
 public class Datable implements Serializable {
 
     @ApiModelProperty(hidden = true)

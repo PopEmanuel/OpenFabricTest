@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,12 +23,18 @@ public class WorkerStatisticService {
         this.workerStatisticRepository = workerStatisticRepository;
     }
 
-    public WorkerStatistic addWorkerStatistic(Statistics statistics){
+    public WorkerStatistic addWorkerStatistic(Statistics statistics, Worker worker){
         WorkerStatistic workerStatistic = new WorkerStatistic();
+        workerStatistic.setWorker(worker);
         workerStatistic.setCpu(statistics.getCpuStats().getCpuUsage().getTotalUsage());
         workerStatistic.setMemoryLimit(statistics.getMemoryStats().getLimit());
         workerStatistic.setMemoryUsage(statistics.getMemoryStats().getMaxUsage());
         return workerStatisticRepository.save(workerStatistic);
     }
 
+    public List<WorkerStatistic> getAllWorkerStatistics(String workerId) {
+        return workerStatisticRepository.findAll().stream()
+                .filter(statistic -> statistic.getWorker() != null && statistic.getWorker().getId().equals(workerId))
+                .collect(Collectors.toList());
+    }
 }

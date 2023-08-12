@@ -70,4 +70,10 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="WO_04" author="emanuel">
+        <addColumn tableName="worker_statistic">
+            <column name="worker_id" type="varchar (255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

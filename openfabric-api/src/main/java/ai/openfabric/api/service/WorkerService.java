@@ -64,11 +64,12 @@ public class WorkerService {
         return workerRepository.findById(id).orElseThrow(() -> new CrudOperationException("Worker with this id doesn't exist"));
     }
 
-    public WorkerStatistic getWorkerStatistics(String id){
+    public List<WorkerStatistic> getWorkerStatistics(String id){
         Worker worker = getWorkerById(id);
         Statistics statistics = dockerService.getWorkerStatistics(worker);
+        workerStatisticService.addWorkerStatistic(statistics, worker);
 
-        return workerStatisticService.addWorkerStatistic(statistics);
+        return workerStatisticService.getAllWorkerStatistics(worker.getId());
     }
 
     private void setWorkerStatus(Worker worker, Integer status){
