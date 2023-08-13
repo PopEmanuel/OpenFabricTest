@@ -93,11 +93,9 @@ public class DockerService {
                 pullImageFromDocker(worker.getImage());
                 return containerCmd.exec();
             } catch (InterruptedException ex) {
-                log.error(e.getMessage());
+                log.error(Arrays.toString(ex.getStackTrace()));
+                throw new DockerContainerException(ex.getMessage());
             }
-
-            log.error(Arrays.toString(e.getStackTrace()));
-            throw new DockerContainerException(e.getMessage());
         }
     }
 

@@ -26,14 +26,13 @@ public class WorkerService {
         this.workerStatisticService = workerStatisticService;
     }
 
-    public Worker addWorker(Worker worker) {
+    public void addWorker(Worker worker) {
         CreateContainerResponse container = dockerService.createContainer(worker);
 
         if (container != null) {
             worker.setContainerId(container.getId());
             workerRepository.save(worker);
         }
-        return worker;
     }
 
     public void removeWorker(String id) {
