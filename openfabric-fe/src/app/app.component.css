@@ -1,0 +1,230 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #E5E5E5;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-side {
+    background-color: #E5E5E5;
+    width: 30%;
+    padding: 50px;
+    color: #000000;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .title {
+    margin-bottom: 20px;
+  }
+  
+  .title h1 {
+    font-weight: bold;
+    font-size: 50px;
+    margin-bottom: 5px;
+  }
+  
+  .title h2 {
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgb(138, 125, 125);
+  }
+
+  .list-container h2 {
+    margin-top: 0px;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+  
+  .input-container h2 {
+    margin-top: 0px;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+
+  .logo-box {
+    display: flex;
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  
+  .logo-container {
+    background-color: #FFFFFF;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+  }
+  
+  .logo img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .logo-text {
+    font-size: 35px;
+    color: #000000;
+  }
+
+  .right-side {
+    background-color: #FFFFFF;
+    width: 70%;
+    display: flex;
+    padding: 100px 50px; 
+    margin: 50px 20px;   
+    border-radius: 20px;
+  }
+
+  .list-container {
+    width: 50%;
+    padding-left: 20px;
+  }
+
+  .docker-container-list {
+    overflow-y: scroll;
+    height: 350px;
+    padding-bottom: 15px;
+  }
+  
+  .docker-container {
+    background-color: #FFFFFF;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 20px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: background-color 0.3s;
+  }
+  
+  .docker-container:hover {
+    background-color: #007bff;
+  }
+  
+  .container-info {
+    color: black;
+    display: flex;
+    align-items: center; 
+    width: 100%; 
+  }
+  
+  .name-and-image {
+    flex: 1; 
+  }
+  
+  .container-name {
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .image-name {
+    color: gray;
+    margin: 5px 0 0;
+  }
+  
+  .status span {
+    font-weight: bold;
+  }
+  
+  .green {
+    color: green;
+  }
+  
+  .red {
+    color: red;
+  }
+  .input-container {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+  }
+  
+  .input-container input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+  }
+  
+  .input-container input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .add-button {
+    background-color: #007bff;
+    color: #FFFFFF;
+    opacity: 80%;
+    border: none;
+    margin-top: 12px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #0056b3;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center; 
+    width: 80%;
+  }
+  
+  .start-button{
+    padding: 10px;
+    margin-left: 10px;
+    flex: 1; 
+    background-color: #007bff;
+    opacity: 80%;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .stop-button {
+    padding: 10px;
+    margin-left: 10px;
+    flex: 1; 
+    background-color: #ff4a4a;
+    color: white;
+    opacity: 80%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .start-button:hover, .stop-button:hover {
+    background-color: #0056b3; 
+  }
+  

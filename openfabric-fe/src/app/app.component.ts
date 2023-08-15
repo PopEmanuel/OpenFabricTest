@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'openfabric-fe';
+  containerStatus: string = 'running'; // Set the initial status, or get it from your data
+
+  getStatusClass(): string {
+    return this.containerStatus === 'running' ? 'green' : 'red';
+  }
 }
