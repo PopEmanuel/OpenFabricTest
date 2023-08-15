@@ -27,76 +27,38 @@
     <div class="right-side">
       <div class="input-container">
         <h2>Add a new container</h2>
-        <input type="text" placeholder="Container Name">
-        <input type="text" placeholder="Image Name">
-        <input type="text" placeholder="Port">
-        <input type="text" placeholder="Environment Variables">
-        <input type="text" placeholder="Host Name">
-        <input type="text" placeholder="Commands">
-        <button class="add-button">Add a container</button>
+        <input type="text" #nameInput placeholder="Container Name">
+        <input type="text" #imageInput placeholder="Image Name">
+        <div class="port-inputs">
+          <input type="text" #portStartInput class="port-input" placeholder="Port">
+          <span class="port-separator">:</span>
+          <input type="text" #portEndInput class="port-input" placeholder="Port">
+        </div>
+        <input type="text" #envInput placeholder="Environment Variables">
+        <input type="text" #hostNameInput placeholder="Host Name">
+        <input type="text" #cmdInput placeholder="Commands">
+        <button class="add-button" (click)="addContainer(nameInput.value, imageInput.value, portStartInput.value, 
+        portEndInput.value , envInput.value, hostNameInput.value, cmdInput.value)">Add a container</button>
       </div>
       <div class="list-container">
         <h2>Your containers</h2>
       <div class="docker-container-list">
-        <div class="docker-container">
+        <div class="docker-container" *ngFor="let container of containers"
+     [class.selected]="container.id === selectedContainerId" (click)="selectContainer(container.id)">
           <div class="container-info">
             <div class="name-and-image">
-              <h3 class="container-name">Container Name</h3>
-              <p class="image-name">Image Name</p>
+              <h3 class="container-name">{{ container.name }}</h3>
+              <p class="image-name">{{ container.image }}</p>
             </div>
             <div class="status">
-              <span [ngClass]="getStatusClass()">{{ containerStatus }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="docker-container">
-          <div class="container-info">
-            <div class="name-and-image">
-              <h3 class="container-name">Container Name</h3>
-              <p class="image-name">Image Name</p>
-            </div>
-            <div class="status">
-              <span [ngClass]="getStatusClass()">{{ containerStatus }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="docker-container">
-          <div class="container-info">
-            <div class="name-and-image">
-              <h3 class="container-name">Container Name</h3>
-              <p class="image-name">Image Name</p>
-            </div>
-            <div class="status">
-              <span [ngClass]="getStatusClass()">{{ containerStatus }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="docker-container">
-          <div class="container-info">
-            <div class="name-and-image">
-              <h3 class="container-name">Container Name</h3>
-              <p class="image-name">Image Name</p>
-            </div>
-            <div class="status">
-              <span [ngClass]="getStatusClass()">{{ containerStatus }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="docker-container">
-          <div class="container-info">
-            <div class="name-and-image">
-              <h3 class="container-name">Container Name</h3>
-              <p class="image-name">Image Name</p>
-            </div>
-            <div class="status">
-              <span [ngClass]="getStatusClass()">{{ containerStatus }}</span>
+              <span [ngClass]="getStatusClass(container.status)">{{ getStatusText(container.status) }}</span>
             </div>
           </div>
         </div>
         </div>
         <div class="buttons">
-          <button class="start-button">Start</button>
-          <button class="stop-button">Stop</button>
+          <button class="start-button" (click)="startContainer(selectedContainerId)">Start</button>
+          <button class="stop-button" (click)="stopContainer(selectedContainerId)">Stop</button>
         </div>
       
       </div>
