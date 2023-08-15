@@ -26,7 +26,8 @@
     </div>
     <div class="right-side">
       <div class="input-container">
-        <h2>Add a new container</h2>
+        <div *ngIf="viewMode === 'inputs'; else statisticsView" class="input-container">
+          <h2>Add a new container</h2>
         <input type="text" #nameInput placeholder="Container Name">
         <input type="text" #imageInput placeholder="Image Name">
         <div class="port-inputs">
@@ -40,6 +41,16 @@
         <button class="add-button" (click)="addContainer(nameInput.value, imageInput.value, portStartInput.value, 
         portEndInput.value , envInput.value, hostNameInput.value, cmdInput.value)">Add a container</button>
       </div>
+        </div>
+        <ng-template #statisticsView>
+          <div class="statistics-list">
+          <h3>Statistics for Container {{ selectedContainerId }}</h3>
+        <div class="statistics-container" *ngFor="let container of containerStatistics">
+          <p>Cpu: {{container.cpu}} Memory usage: {{container.memoryUsage}} Memory limit: {{container.memoryLimit}}</p>
+        </div>
+        </div>
+        <button class="add-button" (click)="toggleStatisticsView()">Hide Statistics</button>
+        </ng-template>
       <div class="list-container">
         <h2>Your containers</h2>
       <div class="docker-container-list">

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, tap } from 'rxjs';
+import { Container } from 'src/model/container';
+import { Statistic } from 'src/model/statistics';
 import { WorkerService } from 'src/service/worker.service';
-import { ErrorSnackBarComponent } from 'src/util/error-snack-bar/error-snack-bar.component';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,10 @@ import { ErrorSnackBarComponent } from 'src/util/error-snack-bar/error-snack-bar
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  containers: any[] = [];
+  containers: Container[] = [];
+  containerStatistics: Statistic[] = [];
   selectedContainerId: string = "";
+  viewMode: 'inputs' | 'statistics' = 'inputs';
   constructor(private workerService: WorkerService, private snackBar: MatSnackBar) {}
 
   
@@ -24,6 +27,10 @@ export class AppComponent {
   }
 
   selectContainer(containerId: string): void {
+    if(this.selectedContainerId === containerId){
+      this.getContainerStatistics(this.selectedContainerId);
+      this.toggleStatisticsView();
+    }
     this.selectedContainerId = containerId;
   }
 
@@ -39,15 +46,20 @@ export class AppComponent {
       console.log(data);
       this.containers = data;
     })
+  }
 
-    this.workerService.getContainers(0, 10).subscribe(
-      (data: any) => {
-        this.containers = data;
-      },
-      (error: any) => {
+  getContainerStatistics(containerId: string): void{
+    this.workerService.getContainerStatistics(containerId)
+    .pipe(
+      catchError(error => {
         console.error(error);
-      }
-    );
+        return [];
+      })
+    )
+    .subscribe((data: any) => {
+      console.log(data);
+      this.containerStatistics = data;
+    })
   }
 
   startContainer(workerId: string): void{
@@ -99,6 +111,11 @@ export class AppComponent {
 
   getStatusText(status: number): string {
     return status === 1 ? 'running' : 'stopped';
+  }
+
+  toggleStatisticsView(): void {
+    this.viewMode = this.viewMode === 'inputs' ? 'statistics' : 'inputs';
+
   }
 
   openErrorSnackbar(error: any): void {

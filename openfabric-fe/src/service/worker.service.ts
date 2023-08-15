@@ -17,6 +17,12 @@ export class WorkerService {
     return this.http.get(`${this.baseUrl}?page=${page}&size=${size}`);
   }
 
+  getContainerStatistics(containerId: string): Observable<any> {
+    console.log("Getting workers");
+
+    return this.http.get(`${this.baseUrl}/statistics?workerId=${containerId}`);
+  }
+
   startContainer(workerId: string): Observable<any> {
     console.log(`Starting worker with id = ${workerId}`);
     
