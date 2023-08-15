@@ -6,12 +6,15 @@ import ai.openfabric.api.model.Worker;
 import ai.openfabric.api.repository.WorkerRepository;
 import ai.openfabric.api.util.WorkerStatus;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Statistics;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -74,5 +77,53 @@ public class WorkerService {
     private void setWorkerStatus(Worker worker, Integer status) {
         worker.setStatus(status);
         workerRepository.save(worker);
+    }
+
+    private List<Worker> getAllWorkers() {
+        return this.workerRepository.findAll();
+    }
+
+    @Scheduled(fixedRate = 300000)
+    private void filterContainers() {
+        log.info("Checking and updating sudden stopped or deleted containers");
+
+        List<Container> containers = this.dockerService.getContainers();
+        List<Worker> workers = getAllWorkers();
+
+        for (Worker worker : workers) {
+            String containerId = worker.getContainerId();
+            Container workerContainer = containers.stream()
+                    .filter(container -> container.getId().equals(containerId))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        log.info("Deleting worker with id = " + worker.getId()
+                                + " because docker container was deleted");
+                        this.workerRepository.delete(worker);
+                        return null;
+                    });
+            if (workerContainer != null) {
+                boolean changeStatus = false;
+                String currentStatus = worker.getStatus() == WorkerStatus.Stopped.ordinal() ? "exited" : "running";
+                if (currentStatus.equals("running")) {
+                    if (!workerContainer.getState().equals("running")) {
+                        changeStatus = true;
+                    }
+                } else {
+                    if (workerContainer.getState().equals("running")) {
+                        //Stopped states can be also represented by Created, Exited(1), Dead etc.
+                        changeStatus = true;
+                    }
+                }
+                if (changeStatus) {
+                    log.info("Updating status of worker with id = " + worker.getId()
+                            + " because docker container status changed externally");
+                    worker.setStatus(worker.getStatus() == WorkerStatus.Stopped.ordinal() ?
+                            WorkerStatus.Running.ordinal() : WorkerStatus.Stopped.ordinal());
+                    workerRepository.save(worker);
+                }
+
+            }
+        }
+
     }
 }

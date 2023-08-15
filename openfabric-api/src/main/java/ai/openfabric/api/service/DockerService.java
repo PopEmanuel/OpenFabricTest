@@ -4,6 +4,7 @@ import ai.openfabric.api.exception.DockerContainerException;
 import ai.openfabric.api.model.WorkerStatistic;
 import ai.openfabric.api.model.Worker;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.core.InvocationBuilder.AsyncResultCallback;
 import com.github.dockerjava.api.command.*;
 import com.github.dockerjava.api.exception.ConflictException;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 @ComponentScan
@@ -54,6 +56,9 @@ public class DockerService {
         log.info("Stopped Pinging..");
     }
 
+    public List<Container> getContainers(){
+        return dockerClient.listContainersCmd().withShowAll(true).exec();
+    }
 
     public void startContainer(String containerId) {
         try {
